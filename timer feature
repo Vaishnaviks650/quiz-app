@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Quiz App - Day 2</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#667eea,#764ba2);
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+}
+
+.container{
+background:white;
+width:90%;
+max-width:500px;
+padding:25px;
+border-radius:15px;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+h2{
+margin-bottom:20px;
+}
+
+#timer{
+text-align:right;
+font-weight:bold;
+color:#667eea;
+margin-bottom:15px;
+}
+
+.btn{
+display:block;
+width:100%;
+padding:12px;
+margin:10px 0;
+border:none;
+border-radius:8px;
+background:#f1f1f1;
+cursor:pointer;
+text-align:left;
+font-size:15px;
+}
+
+.btn:hover{
+background:#ddd;
+}
+
+#next-btn{
+background:#667eea;
+color:white;
+display:none;
+margin-top:10px;
+}
+
+#score{
+text-align:center;
+font-size:24px;
+font-weight:bold;
+margin-top:20px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div id="timer">
+Time Left: <span id="time">15</span>s
+</div>
+
+<h2 id="question">Question</h2>
+
+<div id="answer-buttons"></div>
+
+<button id="next-btn">
+Next
+</button>
+
+<p id="score"></p>
+
+</div>
+
+<script>
+
+const questions = [
+
+{
+question:"What does HTML stand for?",
+answers:[
+{text:"Hyper Text Markup Language",correct:true},
+{text:"High Tech Modern Language",correct:false},
+{text:"Home Tool Markup Language",correct:false},
+{text:"Hyper Tool Machine Language",correct:false}
+]
+},
+
+{
+question:"Which language is used for styling websites?",
+answers:[
+{text:"Python",correct:false},
+{text:"Java",correct:false},
+{text:"CSS",correct:true},
+{text:"C++",correct:false}
+]
+},
+
+{
+question:"Which language adds interactivity to websites?",
+answers:[
+{text:"JavaScript",correct:true},
+{text:"HTML",correct:false},
+{text:"CSS",correct:false},
+{text:"SQL",correct:false}
+]
+}
+
+];
+
+let currentQuestionIndex = 0;
+let score = 0;
+let timer;
+let timeLeft = 15;
+
+const questionElement =
+document.getElementById("question");
+
+const answerButtons =
+document.getElementById("answer-buttons");
+
+const nextButton =
+document.getElementById("next-btn");
+
+const timerElement =
+document.getElementById("time");
+
+function startQuiz(){
+
+currentQuestionIndex = 0;
+score = 0;
+
+document.getElementById("score").innerHTML="";
+
+nextButton.innerHTML = "Next";
+
+showQuestion();
+}
+
+function startTimer(){
+
+clearInterval(timer);
+
+timeLeft = 15;
+
+timerElement.textContent = timeLeft;
+
+timer = setInterval(()=>{
+
+timeLeft--;
+
+timerElement.textContent = timeLeft;
+
+if(timeLeft <= 0){
+
+clearInterval(timer);
+
+handleNextButton();
+
+}
+
+},1000);
+
+}
+
+function showQuestion(){
+
+resetState();
+
+startTimer();
+
+let currentQuestion =
+questions[currentQuestionIndex];
+
+questionElement.innerHTML =
+currentQuestion.question;
+
+currentQuestion.answers.forEach(answer=>{
+
+const button =
+document.createElement("button");
+
+button.innerHTML =
+answer.text;
+
+button.classList.add("btn");
+
+answerButtons.appendChild(button);
+
+button.addEventListener("click",()=>{
+
+clearInterval(timer);
+
+if(answer.correct){
+
+button.style.background =
+"lightgreen";
+
+score++;
+
+}else{
+
+button.style.background =
+"salmon";
+
+}
+
+Array.from(answerButtons.children)
+.forEach(btn=>btn.disabled=true);
+
+nextButton.style.display =
+"block";
+
+});
+
+});
+
+}
+
+function resetState(){
+
+nextButton.style.display =
+"none";
+
+answerButtons.innerHTML="";
+
+}
+
+function showScore(){
+
+clearInterval(timer);
+
+questionElement.innerHTML =
+"Quiz Finished 🎉";
+
+answerButtons.innerHTML="";
+
+document.getElementById("score")
+.innerHTML =
+"Your Score: " +
+score +
+" / " +
+questions.length;
+
+nextButton.innerHTML =
+"Play Again";
+
+nextButton.style.display =
+"block";
+
+timerElement.textContent = 0;
+
+}
+
+function handleNextButton(){
+
+currentQuestionIndex++;
+
+if(currentQuestionIndex <
+questions.length){
+
+showQuestion();
+
+}else{
+
+showScore();
+
+}
+
+}
+
+nextButton.addEventListener(
+"click",
+()=>{
+
+if(currentQuestionIndex <
+questions.length){
+
+handleNextButton();
+
+}else{
+
+startQuiz();
+
+}
+
+}
+);
+
+startQuiz();
+
+</script>
+
+</body>
+</html>
