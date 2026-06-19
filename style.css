@@ -1,0 +1,27 @@
+#darkModeBtn{
+position:absolute;
+top:20px;
+right:20px;
+padding:10px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+.dark{
+background:#121212 !important;
+}
+
+.dark .container{
+background:#1e1e1e;
+color:white;
+}
+
+.dark .btn{
+background:#333;
+color:white;
+}
+
+.dark .btn:hover{
+background:#444;
+}
